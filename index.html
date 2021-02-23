@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Hacked Hogwarts</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>Student list</h1>
     <div id="filtering">
+        <button class="filter"  data-action="filter" data-filter="all">All</button>
         <button class="filter"  data-action="filter" data-filter="gryffindor">Gryffindor</button>
         <button class="filter"  data-action="filter" data-filter="hufflepuff">Hufflepuff</button>
         <button class="filter"  data-action="filter" data-filter="ravenclaw">Ravenclaw</button>
@@ -17,7 +18,6 @@
     </div>
     <div>
         <select name="sorting" id="sorting">
-            <option value="none">No sorting</option>
             <option value="firstNameAZ">Firstname A-Z</option>
             <option value="firstNameZA">Firstname Z-A</option>
             <option value="lastnameAZ">Lastname A-Z</option>
@@ -26,11 +26,25 @@
     </div>
     <div id="listview">
     </div>
+    <div id="popup" class="hidden">
+        <div>
+            <button>X</button>
+            <img src="images/" alt="profile pic">
+            <h3 class="name"></h3>
+            <p class="house"></p>
+        </div>
+    </div>
     <template>
         <div class="student">
-            <img src="images/" alt="">
-            <div><h3 class="name"></h3>
-            <p class="house"></p></div>
+            <div class="studentinfo">
+                <img src="images/" alt="profile pic">
+                <div><h3 class="name"></h3>
+                <p class="house"></p></div>
+            </div>
+            <div>
+                <button class="expell">❌ EXPELL</button>
+                <button class="prefect">🏆 Appoint prefect</button>
+            </div>
         </div>
     </template>
 

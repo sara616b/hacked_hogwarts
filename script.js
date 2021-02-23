@@ -3,6 +3,7 @@
 document.addEventListener("DOMContentLoaded", start);
 
 const allStudents = [];
+const expelledStudentsArray = [];
 
 const Student = {
   firstname: "",
@@ -13,8 +14,9 @@ const Student = {
   house: "",
 };
 
-let filterValue;
-let sortValue;
+let filterBy = "all";
+let sortBy = "Firstname A-Z";
+let studentsOnDisplay;
 
 function start() {
   console.log("start");
@@ -25,7 +27,7 @@ function start() {
   );
 
   //add eventlisteners to everything you can click on
-  addClickListeners();
+  addingInitialEventListeners();
 }
 
 function loadJson(link, action) {
@@ -37,25 +39,21 @@ function loadJson(link, action) {
     });
 }
 
-function addClickListeners() {
+function addingInitialEventListeners() {
+  document.querySelectorAll("[data-action=filter]").forEach((button) => {
+    button.addEventListener("click", setFilter);
+  });
   document
-    .querySelector('[data-filter="gryffindor"]')
-    .addEventListener("click", filterStudents);
-  document
-    .querySelector('[data-filter="hufflepuff"]')
-    .addEventListener("click", filterStudents);
-  document
-    .querySelector(`[data-filter=ravenclaw]`)
-    .addEventListener("click", filterStudents);
-  document
-    .querySelector(`[data-filter=slytherin]`)
-    .addEventListener("click", filterStudents);
-  document.querySelector("#sorting").addEventListener("input", sortingStudents);
+    .querySelector("#sorting")
+    .addEventListener("input", buildStudentList);
+  document.querySelector("#popup button").addEventListener("click", () => {
+    document.querySelector("#popup").classList.add("hidden");
+  });
 }
 
 function prepareStudentData(data) {
-  let students = createObjectsWithStudentData(data);
-  showStudentList(students);
+  studentsOnDisplay = createObjectsWithStudentData(data);
+  buildStudentList(studentsOnDisplay);
 }
 
 //returns object with all students
@@ -150,6 +148,24 @@ function createObjectsWithStudentData(data) {
       ".png"
     ).toLowerCase();
     //TODO check if two images are the same and change filename (for the patils)
+    //special cases for image files:
+    if (student.lastname === "Patil") {
+      student.image = (
+        lastnameFromJSON +
+        "_" +
+        firstnameFromJSON +
+        ".png"
+      ).toLowerCase();
+    } else if (student.firstname === "Justin") {
+      student.image = (
+        lastnameFromJSON.substring(lastnameFromJSON.indexOf("-") + 1) +
+        "_" +
+        firstnameFromJSON.substring(0, 1) +
+        ".png"
+      ).toLowerCase();
+    } else if (student.firstname === "Leanne") {
+      student.image = "#";
+    }
 
     //add to allStudents array
     allStudents.push(student);
@@ -158,6 +174,13 @@ function createObjectsWithStudentData(data) {
   //console.table(allStudents);
   return allStudents;
 }
+//build studentlist by sorting them and then show them
+function buildStudentList() {
+  sortingStudents();
+  filterStudents();
+  showStudentList(studentsOnDisplay);
+}
+
 function showStudentList(students) {
   const list = document.querySelector("#listview");
   const template = document.querySelector("template");
@@ -165,6 +188,15 @@ function showStudentList(students) {
 
   students.forEach((student) => {
     showSingleStudent(student, template, list);
+  });
+
+  //add expellbutton
+  document.querySelectorAll(".expell").forEach((expellButton) => {
+    expellButton.addEventListener("click", expellStudent);
+  });
+  //add prefect button
+  document.querySelectorAll(".prefect").forEach((prefectButton) => {
+    prefectButton.addEventListener("click", appointPrefet);
   });
 }
 function showSingleStudent(student, template, list) {
@@ -180,19 +212,29 @@ function showSingleStudent(student, template, list) {
     clone.querySelector(".name").textContent =
       student.firstname + " " + student.lastname;
   }
+  clone.querySelector(".student").id = student.firstname;
   //insert house
   clone.querySelector(".house").textContent = student.house;
+  //add eventlistener for popup
+  clone.querySelector(".studentinfo").addEventListener("click", showPopup);
   list.appendChild(clone);
+}
+
+function setFilter() {
+  filterBy = this.getAttribute("data-filter");
+  buildStudentList();
 }
 
 //sets filter and checks students by calling isInHouse
 function filterStudents() {
-  filterValue = this.getAttribute("data-filter");
-  const filteredList = allStudents.filter(isInHouse);
-  showStudentList(filteredList);
+  if (filterBy == "all") {
+    studentsOnDisplay = allStudents;
+  } else {
+    studentsOnDisplay = allStudents.filter(isInHouse);
+  }
 }
 function isInHouse(student) {
-  if (student.house.toLowerCase() === filterValue) {
+  if (student.house.toLowerCase() === filterBy) {
     return true;
   } else {
     return false;
@@ -201,30 +243,24 @@ function isInHouse(student) {
 
 //sorts students
 function sortingStudents() {
-  sortValue = document.querySelector("#sorting").options[
+  sortBy = document.querySelector("#sorting").options[
     document.querySelector("#sorting").selectedIndex
   ].text;
-  console.log(sortValue);
-
-  allStudents.sort(compareByName);
-  if (sortValue === "Firstname A-Z") {
-    console.log("sort first first");
-  }
-  showStudentList(allStudents);
+  studentsOnDisplay.sort(compareByName);
 }
 function compareByName(a, b) {
   let aval = a;
   let bval = b;
-  if (sortValue === "Firstname A-Z") {
+  if (sortBy === "Firstname A-Z") {
     aval = a.firstname;
     bval = b.firstname;
-  } else if (sortValue === "Firstname Z-A") {
+  } else if (sortBy === "Firstname Z-A") {
     aval = b.firstname;
     bval = a.firstname;
-  } else if (sortValue === "Lastname A-Z") {
+  } else if (sortBy === "Lastname A-Z") {
     aval = a.lastname;
     bval = b.lastname;
-  } else if (sortValue === "Lastname Z-A") {
+  } else if (sortBy === "Lastname Z-A") {
     aval = b.lastname;
     bval = a.lastname;
   }
@@ -234,4 +270,46 @@ function compareByName(a, b) {
   } else {
     return -1;
   }
+}
+
+//show popup
+function showPopup() {
+  const popup = document.querySelector("#popup");
+  popup.classList = "";
+
+  //insert content about student
+  popup.querySelector(".name").textContent = this.querySelector(
+    ".name"
+  ).textContent;
+  popup.querySelector("img").src = this.querySelector("img").src;
+
+  let house = this.querySelector(".house").textContent;
+  popup.querySelector(".house").textContent = house;
+  popup.classList.add(house.toLowerCase());
+}
+
+//expell a student
+function expellStudent() {
+  //find student's place in array
+  let thisStudetsIndex;
+  for (let i = 0; i < allStudents.length; i++) {
+    if (allStudents[i].firstname === this.parentElement.parentElement.id) {
+      thisStudetsIndex = i;
+    }
+  }
+
+  //add to expelled students array
+  expelledStudentsArray.push(allStudents[thisStudetsIndex]);
+
+  //remove from allStudents array
+  allStudents.splice(thisStudetsIndex, 1);
+  studentsOnDisplay = allStudents;
+
+  //build list
+  buildStudentList();
+}
+
+//appoint prefect
+function appointPrefet() {
+  console.log("APPOINT PREFECT");
 }

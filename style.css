@@ -8,6 +8,10 @@ body {
   padding: 20px;
 }
 
+.hidden {
+  display: none;
+}
+
 h1,
 p,
 h3 {
@@ -22,10 +26,20 @@ h1 {
   padding: 5px;
 }
 
-.student {
+.student,
+.student div div {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+.student div {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+}
+.expell,
+.prefect {
+  padding: 5px;
+  margin: 10px;
 }
 .student h3,
 .student p,
@@ -34,4 +48,55 @@ h1 {
 }
 .student img {
   width: 80px;
+}
+
+#popup {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+#popup div {
+  background-color: white;
+  width: 80vw;
+  height: 80vh;
+  display: flex;
+  overflow: scroll;
+  margin: 10vh auto;
+  flex-direction: column;
+  padding: 20px;
+}
+
+#popup img {
+  width: fit-content;
+}
+
+#popup button {
+  width: fit-content;
+  height: fit-content;
+  background-color: white;
+  border: 0;
+  color: black;
+  padding: 20px;
+  align-self: flex-end;
+}
+
+#popup div h3,
+#popup div p {
+  padding: 10px 0;
+}
+
+.hufflepuff {
+  background-color: rgba(255, 255, 0, 0.363);
+}
+.slytherin {
+  background-color: rgba(43, 230, 83, 0.384);
+}
+.gryffindor {
+  background-color: rgba(248, 46, 46, 0.418);
+}
+.ravenclaw {
+  background-color: rgba(57, 99, 235, 0.411);
 }
