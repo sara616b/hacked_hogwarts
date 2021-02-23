@@ -13,15 +13,19 @@ const Student = {
   house: "",
 };
 
+let filterValue;
+let sortValue;
+
 function start() {
   console.log("start");
-
   //load jsondata
   loadJson(
     "https://petlatkea.dk/2021/hogwarts/students.json",
     prepareStudentData
   );
-  //show jsondata in templates
+
+  //add eventlisteners to everything you can click on
+  addClickListeners();
 }
 
 function loadJson(link, action) {
@@ -33,11 +37,28 @@ function loadJson(link, action) {
     });
 }
 
+function addClickListeners() {
+  document
+    .querySelector('[data-filter="gryffindor"]')
+    .addEventListener("click", filterStudents);
+  document
+    .querySelector('[data-filter="hufflepuff"]')
+    .addEventListener("click", filterStudents);
+  document
+    .querySelector(`[data-filter=ravenclaw]`)
+    .addEventListener("click", filterStudents);
+  document
+    .querySelector(`[data-filter=slytherin]`)
+    .addEventListener("click", filterStudents);
+  document.querySelector("#sorting").addEventListener("input", sortingStudents);
+}
+
 function prepareStudentData(data) {
   let students = createObjectsWithStudentData(data);
   showStudentList(students);
 }
 
+//returns object with all students
 function createObjectsWithStudentData(data) {
   //loop through json
   data.forEach((jsonObject) => {
@@ -133,27 +154,84 @@ function createObjectsWithStudentData(data) {
     //add to allStudents array
     allStudents.push(student);
   });
-
   //display all students in console
-  console.table(allStudents);
+  //console.table(allStudents);
   return allStudents;
 }
-
 function showStudentList(students) {
   const list = document.querySelector("#listview");
   const template = document.querySelector("template");
+  list.innerHTML = "";
 
   students.forEach((student) => {
     showSingleStudent(student, template, list);
   });
 }
-
 function showSingleStudent(student, template, list) {
   const clone = template.cloneNode(true).content;
+
+  //insert image
   clone.querySelector("img").src += student.image;
-  console.log("/image/" + student.image + ")");
-  clone.querySelector(".name").textContent =
-    student.firstname + " " + student.lastname;
+  //insert name
+  if (student.middlename !== "null") {
+    clone.querySelector(".name").textContent =
+      student.firstname + " " + student.middlename + " " + student.lastname;
+  } else {
+    clone.querySelector(".name").textContent =
+      student.firstname + " " + student.lastname;
+  }
+  //insert house
   clone.querySelector(".house").textContent = student.house;
   list.appendChild(clone);
+}
+
+//sets filter and checks students by calling isInHouse
+function filterStudents() {
+  filterValue = this.getAttribute("data-filter");
+  const filteredList = allStudents.filter(isInHouse);
+  showStudentList(filteredList);
+}
+function isInHouse(student) {
+  if (student.house.toLowerCase() === filterValue) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+//sorts students
+function sortingStudents() {
+  sortValue = document.querySelector("#sorting").options[
+    document.querySelector("#sorting").selectedIndex
+  ].text;
+  console.log(sortValue);
+
+  allStudents.sort(compareByName);
+  if (sortValue === "Firstname A-Z") {
+    console.log("sort first first");
+  }
+  showStudentList(allStudents);
+}
+function compareByName(a, b) {
+  let aval = a;
+  let bval = b;
+  if (sortValue === "Firstname A-Z") {
+    aval = a.firstname;
+    bval = b.firstname;
+  } else if (sortValue === "Firstname Z-A") {
+    aval = b.firstname;
+    bval = a.firstname;
+  } else if (sortValue === "Lastname A-Z") {
+    aval = a.lastname;
+    bval = b.lastname;
+  } else if (sortValue === "Lastname Z-A") {
+    aval = b.lastname;
+    bval = a.lastname;
+  }
+
+  if (aval > bval) {
+    return 1;
+  } else {
+    return -1;
+  }
 }

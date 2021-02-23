@@ -9,9 +9,20 @@
 </head>
 <body>
     <h1>Student list</h1>
-    <div id="sorting">
-        <button class="filter" id="girl" data-action="filter" data-filter="girl">Girls</button>
-        <button class="filter" id="girl" data-action="filter" data-filter="boy">Boys</button>
+    <div id="filtering">
+        <button class="filter"  data-action="filter" data-filter="gryffindor">Gryffindor</button>
+        <button class="filter"  data-action="filter" data-filter="hufflepuff">Hufflepuff</button>
+        <button class="filter"  data-action="filter" data-filter="ravenclaw">Ravenclaw</button>
+        <button class="filter"  data-action="filter" data-filter="slytherin">Slytherin</button>
+    </div>
+    <div>
+        <select name="sorting" id="sorting">
+            <option value="none">No sorting</option>
+            <option value="firstNameAZ">Firstname A-Z</option>
+            <option value="firstNameZA">Firstname Z-A</option>
+            <option value="lastnameAZ">Lastname A-Z</option>
+            <option value="lastnameZA">Lastname Z-A</option>
+          </select>
     </div>
     <div id="listview">
     </div>
