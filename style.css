@@ -13,33 +13,87 @@ body {
 }
 
 h1,
+h2,
 p,
 h3 {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-h1 {
+#searchbar {
   padding: 5px;
+  border: 1px solid gray;
+  margin: 10px;
 }
-
 #sorting {
   padding: 5px;
 }
+button[data-action="filter"] {
+  padding: 5px 10px;
+  color: rgb(66, 50, 37);
+  background-color: rgb(240, 217, 200);
+  border: 0;
+  border-radius: 3px;
+  margin: 5px auto;
+  font-weight: bold;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.267);
+}
 
-.student,
+button.chosen {
+  background-color: black;
+  color: white;
+}
+
+.student {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: rgb(240, 217, 200);
+  margin: 10px 0;
+  border-radius: 5px;
+  justify-content: space-between;
+}
 .student div div {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
+  background-color: rgb(240, 217, 200);
+  margin: 10px 0;
+  border-radius: 5px;
 }
 .student div {
   display: flex;
   flex-direction: row;
 }
+.student div + div {
+  display: flex;
+  flex-direction: column;
+}
+.student button {
+  background-color: white;
+  border: none;
+  font-weight: bold;
+  padding: 10px 15px;
+  border-radius: 3px;
+  box-shadow: 1px 1px 3px rgba(143, 143, 143, 0.452);
+}
+.expelled button {
+  display: none;
+}
 .expell,
 .prefect {
   padding: 5px;
   margin: 10px;
+}
+
+button[data-prefect="false"]::after {
+  content: "🏆 Appoint prefect";
+}
+button[data-prefect="true"]::after {
+  content: "🏆 Remove as prefect";
+  filter: grayscale(100);
+}
+.prefectsymbol::before {
+  content: "🏆";
 }
 .student h3,
 .student p,
@@ -47,10 +101,12 @@ h1 {
   padding: 5px;
 }
 .student img {
-  width: 80px;
+  width: 100px;
+  height: 100px;
 }
 
-#popup {
+#popup,
+#removeprefect {
   width: 100vw;
   height: 100vh;
   position: fixed;
@@ -58,7 +114,11 @@ h1 {
   top: 0;
 }
 
-#popup div {
+#removeprefect {
+  background-color: rgba(214, 127, 127, 0.212);
+}
+#popup div,
+#removeprefect .dialog {
   background-color: white;
   width: 80vw;
   height: 80vh;
@@ -67,13 +127,41 @@ h1 {
   margin: 10vh auto;
   flex-direction: column;
   padding: 20px;
+  box-shadow: 3px 3px 10px rgba(128, 128, 128, 0.493);
+}
+#removeprefect div div {
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  margin: auto;
+}
+#removeprefect button {
+  padding: 15px;
+  margin: 10px;
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  border: none;
+  box-shadow: 1px 1px 2px rgba(128, 128, 128, 0.274);
+  border-radius: 5px;
+}
+
+#removeprefect h2,
+#removeprefect p {
+  padding: 10px;
+  margin: 0 50px;
+}
+
+#removeprefect .prefectbutton::before {
+  content: "Remove ";
 }
 
 #popup img {
   width: fit-content;
 }
 
-#popup button {
+#popup button,
+#removeprefect .closebutton {
   width: fit-content;
   height: fit-content;
   background-color: white;
@@ -81,6 +169,7 @@ h1 {
   color: black;
   padding: 20px;
   align-self: flex-end;
+  box-shadow: none;
 }
 
 #popup div h3,
@@ -89,14 +178,46 @@ h1 {
 }
 
 .hufflepuff {
-  background-color: rgba(255, 255, 0, 0.363);
+  background-color: rgba(240, 240, 112, 0.363);
 }
 .slytherin {
-  background-color: rgba(43, 230, 83, 0.384);
+  background-color: rgba(126, 233, 149, 0.384);
 }
 .gryffindor {
-  background-color: rgba(248, 46, 46, 0.418);
+  background-color: rgba(231, 119, 119, 0.418);
 }
 .ravenclaw {
-  background-color: rgba(57, 99, 235, 0.411);
+  background-color: rgba(113, 141, 233, 0.411);
+}
+
+/* Info on top of interface */
+#schoolinfo {
+  display: flex;
+  flex-direction: row;
+}
+
+#schoolinfo div {
+  padding: 20px 20px 20px 0;
+}
+
+#gryffindornumber::before {
+  content: "Gryffindor students: ";
+}
+#hufflepuffnumber::before {
+  content: "Hufflepuff students: ";
+}
+#slytherinnumber::before {
+  content: "Slytherin students: ";
+}
+#ravenclawnumber::before {
+  content: "Ravenclaw students: ";
+}
+#totalstudents::before {
+  content: "Total students: ";
+}
+#totalexpelled::before {
+  content: "Total expelled students: ";
+}
+#studentsdisplayed::before {
+  content: "Students displayed: ";
 }

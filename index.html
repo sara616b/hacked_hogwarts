@@ -8,13 +8,28 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Student list</h1>
+    <h1>Hogwarts student list</h1>
+    <div id="schoolinfo">
+        <div id="houseinfo">
+            <p id="gryffindornumber"></p>
+            <p id="hufflepuffnumber"></p>
+            <p id="slytherinnumber"></p>
+            <p id="ravenclawnumber"></p>
+        </div>
+        <div id="studentsinfo">
+            <p id="totalstudents"></p>
+            <p id="totalexpelled"></p>
+            <p id="studentsdisplayed"></p>
+        </div>
+    </div>
     <div id="filtering">
-        <button class="filter"  data-action="filter" data-filter="all">All</button>
+        <button class="filter chosen"  data-action="filter" data-filter="all">All</button>
         <button class="filter"  data-action="filter" data-filter="gryffindor">Gryffindor</button>
         <button class="filter"  data-action="filter" data-filter="hufflepuff">Hufflepuff</button>
         <button class="filter"  data-action="filter" data-filter="ravenclaw">Ravenclaw</button>
         <button class="filter"  data-action="filter" data-filter="slytherin">Slytherin</button>
+        <button class="filter"  data-action="filter" data-filter="expelled">Expelled students</button>
+
     </div>
     <div>
         <select name="sorting" id="sorting">
@@ -22,7 +37,8 @@
             <option value="firstNameZA">Firstname Z-A</option>
             <option value="lastnameAZ">Lastname A-Z</option>
             <option value="lastnameZA">Lastname Z-A</option>
-          </select>
+        </select>
+        <input id="searchbar" type="text" placeholder="Search...">
     </div>
     <div id="listview">
     </div>
@@ -34,6 +50,17 @@
             <p class="house"></p>
         </div>
     </div>
+    <div id="removeprefect" class="hidden">
+        <div class="dialog">
+            <button class="closebutton">X</button>
+            <h2>Warning!</h2>
+            <p>There are already two prefects appointed in this house.<br>Do you want to remove one of the other prefects.</p>
+            <div>
+             <button id="prefectA" class="prefectbutton">Prefect A</button>
+               <button id="prefectB" class="prefectbutton">Prefect B</button>
+            </div>
+        </div>
+    </div>
     <template>
         <div class="student">
             <div class="studentinfo">
@@ -42,8 +69,8 @@
                 <p class="house"></p></div>
             </div>
             <div>
-                <button class="expell">❌ EXPELL</button>
-                <button class="prefect">🏆 Appoint prefect</button>
+                <button class="expell">❌ Expell</button>
+                <button class="prefect" data-field="prefect" data-prefect="false"></button>
             </div>
         </div>
     </template>
