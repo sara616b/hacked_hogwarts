@@ -14,6 +14,9 @@ const Student = {
   image: "",
   house: "",
   prefect: false,
+  expelled: false,
+  inquisitorial: false,
+  bloodstatus: undefined,
 };
 
 let filterBy = "all";
@@ -27,6 +30,13 @@ function start() {
     "https://petlatkea.dk/2021/hogwarts/students.json",
     prepareStudentData
   );
+  //when sure the students array have been created load blood status
+  if (allStudents !== []) {
+    loadJson(
+      "https://petlatkea.dk/2021/hogwarts/families.json",
+      setBloodStatus
+    );
+  }
 
   //add eventlisteners to everything you can click on
   addingInitialEventListeners();
@@ -95,6 +105,18 @@ function showInfoNumbers() {
 function prepareStudentData(data) {
   studentsOnDisplay = createObjectsWithStudentData(data);
   buildStudentList(studentsOnDisplay);
+}
+
+function setBloodStatus(json) {
+  allStudents.forEach((student) => {
+    if (json.half.includes(student.lastname)) {
+      student.bloodstatus = "half blood";
+    } else if (json.pure.includes(student.lastname)) {
+      student.bloodstatus = "pure blood";
+    } else {
+      student.bloodstatus = "muggleborn";
+    }
+  });
 }
 
 //returns object with all students
@@ -188,8 +210,8 @@ function createObjectsWithStudentData(data) {
       firstnameFromJSON.substring(0, 1) +
       ".png"
     ).toLowerCase();
-    //TODO check if two images are the same and change filename (for the patils)
     //special cases for image files:
+    //TODO - make better if you have tiiiiime!!! (this doesn't really make sense but it works for a version1)
     if (student.lastname === "Patil") {
       student.image = (
         lastnameFromJSON +
@@ -204,10 +226,9 @@ function createObjectsWithStudentData(data) {
         firstnameFromJSON.substring(0, 1) +
         ".png"
       ).toLowerCase();
-    } else if (student.firstname === "Leanne") {
-      student.image = "#";
+    } else if (student.firstname == "" || student.lastname == "") {
+      student.image = "no_image.png";
     }
-
     //add to allStudents array
     allStudents.push(student);
   });
@@ -221,7 +242,8 @@ function buildStudentList() {
   sortingStudents();
   if (filterBy === "expelled" && expelledStudentsArray.length === 0) {
     document.querySelector("#listview").innerHTML =
-      "<p>There are no expelled students.</p>";
+      "<p style='padding-top:20px; font-weight:bold;'>There are no expelled students.</p>";
+    document.querySelector("#studentsdisplayed").textContent = "0";
   } else {
     showStudentList(studentsOnDisplay);
   }
@@ -238,7 +260,7 @@ function showStudentList(students) {
 
   //add expellbutton
   document.querySelectorAll(".expell").forEach((expellButton) => {
-    expellButton.addEventListener("click", expellStudent);
+    expellButton.addEventListener("click", expelStudent);
   });
 
   //show info in top of list
@@ -250,13 +272,14 @@ function showSingleStudent(student, template, list) {
   //insert image
   clone.querySelector("img").src += student.image;
   //insert name
+  let displayName;
   if (student.middlename !== "null") {
-    clone.querySelector(".name").textContent =
+    displayName =
       student.firstname + " " + student.middlename + " " + student.lastname;
   } else {
-    clone.querySelector(".name").textContent =
-      student.firstname + " " + student.lastname;
+    displayName = student.firstname + " " + student.lastname;
   }
+  clone.querySelector(".name").textContent = displayName;
   if (student.prefect === true) {
     clone.querySelector("h3").classList.add("prefectsymbol");
   } else if (student.prefect === false) {
@@ -268,15 +291,19 @@ function showSingleStudent(student, template, list) {
   }
   //insert house
   clone.querySelector(".house").textContent = student.house;
+  if (student.inquisitorial === true) {
+    clone.querySelector(".house").classList.add("squadsymbol");
+  } else if (student.inquisitorial === false) {
+    clone.querySelector(".house").classList.remove("squadsymbol");
+  }
   //add eventlistener for popup
-  clone.querySelector(".studentinfo").addEventListener("click", showPopup);
+  clone.querySelector(".studentinfo").addEventListener("click", () => {
+    showPopup(student, displayName);
+  });
 
   //prefect
-
   clone.querySelector(".prefect").dataset.prefect = student.prefect;
-
   clone.querySelector(".prefect").addEventListener("click", appointPrefect);
-
   function appointPrefect() {
     if (student.prefect === true) {
       student.prefect = false;
@@ -284,6 +311,16 @@ function showSingleStudent(student, template, list) {
       tryToAppointPrefect(student);
     }
     buildStudentList();
+  }
+
+  //allow slytherin students to be appointed to the inquisitorial squad
+  if (student.house.toLowerCase() === "slytherin") {
+    console.log("in slytherin");
+    clone.querySelector(".squad").classList.remove("hidden");
+    clone.querySelector(".squad").dataset.squad = student.inquisitorial;
+    clone.querySelector(".squad").addEventListener("click", () => {
+      appointToInqSquad(student);
+    });
   }
 
   list.appendChild(clone);
@@ -348,23 +385,49 @@ function compareByName(a, b) {
 }
 
 //show popup
-function showPopup() {
+function showPopup(student, displayName) {
   const popup = document.querySelector("#popup");
   popup.classList = "";
 
   //insert content about student
-  popup.querySelector(".name").textContent = this.querySelector(
-    ".name"
-  ).textContent;
-  popup.querySelector("img").src = this.querySelector("img").src;
-
-  let house = this.querySelector(".house").textContent;
-  popup.querySelector(".house").textContent = house;
-  popup.classList.add(house.toLowerCase());
+  popup.querySelector(".popupname").textContent = displayName;
+  popup.querySelector("#popup img").src = "images/" + student.image;
+  popup.querySelector(".popuphouse").textContent = "House: " + student.house;
+  popup.classList.add(student.house.toLowerCase());
+  if (student.nickname !== "") {
+    popup.querySelector(".popupnickname").textContent =
+      'Nickname: "' + student.nickname;
+  } else {
+    popup.querySelector(".popupnickname").textContent = "No nickname";
+  }
+  if (student.prefect) {
+    popup.querySelector(".popupprefect").textContent = "Is a prefect.";
+  } else {
+    popup.querySelector(".popupprefect").textContent = "Is not a prefect.";
+  }
+  if (student.expelled) {
+    popup.querySelector(".popupexpelled").textContent = "Has been expelled.";
+  } else {
+    popup.querySelector(".popupexpelled").textContent =
+      "Has not been expelled.";
+  }
+  if (student.inquisitorial) {
+    popup.querySelector(".popupinquisitorial").textContent =
+      "Is part of the inquisitorial squad.";
+  } else {
+    popup.querySelector(".popupinquisitorial").textContent =
+      "Is not part of the inquisitorial squad.";
+  }
+  popup.querySelector(".popupbloodstatus").textContent =
+    "Bloodstatus: " + student.bloodstatus;
+  popup.querySelector("#popuphousecrest").classList = "";
+  popup
+    .querySelector("#popuphousecrest")
+    .classList.add("crest" + student.house.toLowerCase());
 }
 
 //expell a student
-function expellStudent() {
+function expelStudent() {
   //find student's place in array
   let thisStudetsIndex;
   for (let i = 0; i < allStudents.length; i++) {
@@ -372,6 +435,10 @@ function expellStudent() {
       thisStudetsIndex = i;
     }
   }
+  //set to expelled and remove from prefect and inq squad
+  allStudents[thisStudetsIndex].expelled = true;
+  allStudents[thisStudetsIndex].prefect = false;
+  allStudents[thisStudetsIndex].inquisitorial = false;
 
   //add to expelled students array
   expelledStudentsArray.push(allStudents[thisStudetsIndex]);
@@ -383,7 +450,7 @@ function expellStudent() {
   //build list
   buildStudentList();
 }
-
+//appoint prefect if allowed
 function tryToAppointPrefect(selectedStudent) {
   //already selected prefects
   const prefects = allStudents.filter((student) => student.prefect);
@@ -455,6 +522,15 @@ function tryToAppointPrefect(selectedStudent) {
   function appointPrefect(student) {
     student.prefect = true;
   }
+}
+
+function appointToInqSquad(student) {
+  if (student.inquisitorial === true) {
+    student.inquisitorial = false;
+  } else if (student.inquisitorial === false) {
+    student.inquisitorial = true;
+  }
+  buildStudentList();
 }
 
 //search bar

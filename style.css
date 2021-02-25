@@ -6,10 +6,17 @@
 
 body {
   padding: 20px;
+  max-width: 800px;
+  margin: auto;
+  overflow-y: scroll;
 }
 
 .hidden {
   display: none;
+}
+
+h1 {
+  padding-top: 25px;
 }
 
 h1,
@@ -17,6 +24,7 @@ h2,
 p,
 h3 {
   font-family: Arial, Helvetica, sans-serif;
+  color: #32323d;
 }
 
 #searchbar {
@@ -30,7 +38,7 @@ h3 {
 button[data-action="filter"] {
   padding: 5px 10px;
   color: rgb(66, 50, 37);
-  background-color: rgb(240, 217, 200);
+  background-color: rgb(177, 185, 196);
   border: 0;
   border-radius: 3px;
   margin: 5px auto;
@@ -47,16 +55,19 @@ button.chosen {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  background-color: rgb(240, 217, 200);
+  background-color: rgb(229, 231, 236);
   margin: 10px 0;
   border-radius: 5px;
   justify-content: space-between;
+}
+
+.student:nth-of-type(even) {
+  background-color: rgb(175, 178, 187);
 }
 .student div div {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  background-color: rgb(240, 217, 200);
   margin: 10px 0;
   border-radius: 5px;
 }
@@ -67,6 +78,7 @@ button.chosen {
 .student div + div {
   display: flex;
   flex-direction: column;
+  width: 260px;
 }
 .student button {
   background-color: white;
@@ -76,7 +88,8 @@ button.chosen {
   border-radius: 3px;
   box-shadow: 1px 1px 3px rgba(143, 143, 143, 0.452);
 }
-.expelled button {
+.expelled button,
+.expelled .squad {
   display: none;
 }
 .expell,
@@ -95,6 +108,21 @@ button[data-prefect="true"]::after {
 .prefectsymbol::before {
   content: "🏆";
 }
+
+.student p[data-field="squad"] {
+  padding: 0 10px 10px 10px;
+}
+p[data-squad="false"]::after {
+  content: "Appoint to Inquisitorial Squad";
+}
+p[data-squad="true"]::after {
+  content: "Remove from Inquisitorial Squad";
+}
+.squadsymbol::after {
+  content: " ☠";
+  font-size: 120%;
+}
+
 .student h3,
 .student p,
 .student img {
@@ -123,10 +151,10 @@ button[data-prefect="true"]::after {
   width: 80vw;
   height: 80vh;
   display: flex;
-  overflow: scroll;
+  overflow-y: scroll;
   margin: 10vh auto;
   flex-direction: column;
-  padding: 20px;
+  padding: 40px 20px;
   box-shadow: 3px 3px 10px rgba(128, 128, 128, 0.493);
 }
 #removeprefect div div {
@@ -164,12 +192,17 @@ button[data-prefect="true"]::after {
 #removeprefect .closebutton {
   width: fit-content;
   height: fit-content;
-  background-color: white;
   border: 0;
   color: black;
-  padding: 20px;
+  padding: 40px;
+  background-color: rgba(255, 255, 255, 0);
   align-self: flex-end;
   box-shadow: none;
+  position: fixed;
+  top: 8vh;
+  right: 8vw;
+  z-index: 2;
+  border-radius: 25px;
 }
 
 #popup div h3,
@@ -194,10 +227,14 @@ button[data-prefect="true"]::after {
 #schoolinfo {
   display: flex;
   flex-direction: row;
-}
-
-#schoolinfo div {
+  flex-wrap: wrap;
   padding: 20px 20px 20px 0;
+  align-content: stretch;
+}
+#schoolinfo p {
+  width: fit-content;
+  flex-shrink: 1;
+  flex-basis: 250px;
 }
 
 #gryffindornumber::before {
@@ -220,4 +257,18 @@ button[data-prefect="true"]::after {
 }
 #studentsdisplayed::before {
   content: "Students displayed: ";
+}
+
+/* Crest in popup */
+#popup .crestgryffindor::after {
+  content: "🦁 Colors: red and gold.";
+}
+#popup .cresthufflepuff::after {
+  content: "🐼 Colors: Yellow and black.";
+}
+#popup .crestravenclaw::after {
+  content: "🐦 Colors: Blue and silver.";
+}
+#popup .crestslytherin::after {
+  content: "🐍 Colors: green and silver.";
 }

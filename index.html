@@ -10,16 +10,16 @@
 <body>
     <h1>Hogwarts student list</h1>
     <div id="schoolinfo">
+        <p id="gryffindornumber"></p>
+        <p id="hufflepuffnumber"></p>
+        <p id="slytherinnumber"></p>
+        <p id="ravenclawnumber"></p>
+        <p id="totalstudents"></p>
+        <p id="totalexpelled"></p>
+        <p id="studentsdisplayed"></p>
         <div id="houseinfo">
-            <p id="gryffindornumber"></p>
-            <p id="hufflepuffnumber"></p>
-            <p id="slytherinnumber"></p>
-            <p id="ravenclawnumber"></p>
         </div>
         <div id="studentsinfo">
-            <p id="totalstudents"></p>
-            <p id="totalexpelled"></p>
-            <p id="studentsdisplayed"></p>
         </div>
     </div>
     <div id="filtering">
@@ -38,16 +38,23 @@
             <option value="lastnameAZ">Lastname A-Z</option>
             <option value="lastnameZA">Lastname Z-A</option>
         </select>
-        <input id="searchbar" type="text" placeholder="Search...">
+        <input id="searchbar" type="text" placeholder="Search all names...">
     </div>
+    <p style="font-style: italic; opacity: 0.5;">Click on a student for more details!</p>
     <div id="listview">
     </div>
     <div id="popup" class="hidden">
         <div>
             <button>X</button>
-            <img src="images/" alt="profile pic">
-            <h3 class="name"></h3>
-            <p class="house"></p>
+            <img src="" alt="profile pic">
+            <h3 class="popupname"></h3>
+            <p class="popupnickname"></p>
+            <p class="popuphouse"></p>
+            <p id="popuphousecrest">Crest: </p>
+            <p class="popupbloodstatus"></p>
+            <p class="popupprefect"></p>
+            <p class="popupexpelled"></p>
+            <p class="popupinquisitorial"></p>
         </div>
     </div>
     <div id="removeprefect" class="hidden">
@@ -65,12 +72,16 @@
         <div class="student">
             <div class="studentinfo">
                 <img src="images/" alt="profile pic">
-                <div><h3 class="name"></h3>
-                <p class="house"></p></div>
+                <div>
+                    <h3 class="name"></h3>
+                    <p class="house"></p>
+                </div>
             </div>
             <div>
-                <button class="expell">❌ Expell</button>
+                <button class="expell">❌ Expel</button>
                 <button class="prefect" data-field="prefect" data-prefect="false"></button>
+                <p class="squad hidden" data-field="squad" data-prefect="false"></p>
+
             </div>
         </div>
     </template>
