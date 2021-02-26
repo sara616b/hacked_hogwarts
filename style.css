@@ -243,6 +243,7 @@ p[data-squad="true"]::after {
   width: fit-content;
   flex-shrink: 1;
   flex-basis: 250px;
+  color: #4a5058;
 }
 
 #gryffindornumber::before {
@@ -269,16 +270,16 @@ p[data-squad="true"]::after {
 
 /* Crest in popup */
 #popup .crestgryffindor::after {
-  content: "🦁 Colors: red and gold.";
+  content: "🦁 and they use the colors red and gold.";
 }
 #popup .cresthufflepuff::after {
-  content: "🐼 Colors: Yellow and black.";
+  content: "🐼 and they use the colors Yellow and black.";
 }
 #popup .crestravenclaw::after {
-  content: "🐦 Colors: Blue and silver.";
+  content: "🐦 and they use the colors Blue and silver.";
 }
 #popup .crestslytherin::after {
-  content: "🐍 Colors: green and silver.";
+  content: "🐍 and they use the colors green and silver.";
 }
 
 #secretbutton:hover,

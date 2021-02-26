@@ -315,8 +315,14 @@ function showSingleStudent(student, template, list) {
   }
 
   //add expellbutton
-  clone.querySelector(".expell").addEventListener("click", expelStudent);
-
+  if (student.firstname === "Sarah" && student.lastname === "Frederiksen") {
+    clone.querySelector(".expell").addEventListener("click", (student) => {
+      document.querySelector("#Sarah .expell").innerHTML = "YOU CAN'T EXPEL ME";
+      document.querySelector("#Sarah .expell").style.color = "red";
+    });
+  } else {
+    clone.querySelector(".expell").addEventListener("click", expelStudent);
+  }
   //allow slytherin students to be appointed to the inquisitorial squad
   if (
     student.house.toLowerCase() === "slytherin" ||
@@ -408,8 +414,8 @@ function showPopup(student, displayName) {
     "<strong>House: </strong>" + student.house;
   popup.classList.add(student.house.toLowerCase());
   if (student.nickname !== "") {
-    popup.querySelector(".popupnickname").textContent =
-      'Nickname: "' + student.nickname;
+    popup.querySelector(".popupnickname").innerHTML =
+      '<strong>Nickname: </strong>"' + student.nickname;
   } else {
     popup.querySelector(".popupnickname").textContent = "No nickname";
   }
