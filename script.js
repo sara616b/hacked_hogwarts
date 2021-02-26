@@ -573,8 +573,9 @@ function appointToInqSquad(student) {
 function searchThroughPage() {
   //string from searchbar
   let searchstring = document.querySelector("#searchbar").value.toLowerCase();
-  //search through all students and update students
-  let searchResult = allStudents.filter(filterBySearchString);
+  //search through all students (both expelled and current) and update students
+  let searchArray = allStudents.concat(expelledStudentsArray);
+  let searchResult = searchArray.filter(filterBySearchString);
   function filterBySearchString(student) {
     //searching first, middle and last name
     if (
