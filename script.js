@@ -95,11 +95,7 @@ function showInfoNumbers() {
   }
 
   function isInSpecificHouse(student) {
-    if (student.house.toLowerCase() === house) {
-      return true;
-    } else {
-      return false;
-    }
+    student.house.toLowerCase() === house ? true : false;
   }
 }
 
@@ -120,7 +116,7 @@ function setBloodStatus(json) {
   });
 }
 
-//TODO - if time divide out to smaller functions
+//improvement :) - if time divide out to smaller functions
 //returns object with all students
 function createObjectsWithStudentData(data) {
   //loop through json
@@ -234,8 +230,6 @@ function createObjectsWithStudentData(data) {
     //add to allStudents array
     allStudents.push(student);
   });
-  //display all students in console
-  //console.table(allStudents);
   return allStudents;
 }
 //build studentlist by sorting them and then show them
