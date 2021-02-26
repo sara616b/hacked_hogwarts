@@ -95,7 +95,11 @@ function showInfoNumbers() {
   }
 
   function isInSpecificHouse(student) {
-    student.house.toLowerCase() === house ? true : false;
+    if (student.house.toLowerCase() === house) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 
