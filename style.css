@@ -188,7 +188,8 @@ p[data-squad="true"]::after {
 }
 
 #popup img {
-  width: fit-content;
+  width: 100px;
+  height: 100px;
 }
 
 #popup button,

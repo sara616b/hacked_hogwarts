@@ -425,7 +425,7 @@ function showPopup(student, displayName) {
       "Is <strong>not</strong> a prefect.";
   }
   if (student.expelled) {
-    popup.querySelector(".popupexpelled").textContent =
+    popup.querySelector(".popupexpelled").innerHTML =
       "Has been <strong>expelled.</strong>";
   } else {
     popup.querySelector(".popupexpelled").innerHTML =
